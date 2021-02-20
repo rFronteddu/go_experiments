@@ -3,6 +3,7 @@ package tests
 import (
 	"../internal/inputs"
 	"../internal/sorting"
+	"fmt"
 	"sort"
 	"testing"
 )
@@ -33,3 +34,15 @@ func TestShellInsertionSort(t *testing.T) {
 		}
 	}
 }
+
+func TestMergeSort(t *testing.T) {
+	for _, inputArray := range inputs.MapOfSlices {
+		fmt.Println("------------------------------")
+		sorting.MergeSort(inputArray)
+		if !sort.IntsAreSorted(inputArray) {
+			t.Errorf("Array is not sorted: %v", inputArray)
+		}
+	}
+}
+
+
