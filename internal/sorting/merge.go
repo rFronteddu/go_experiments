@@ -6,10 +6,6 @@
 
 package sorting
 
-import (
-	"fmt"
-)
-
 // Merge sort divides the input into two halves, sorts the two, and merges the result.
 // (Divide and conquer algorithm)
 // It guarantees to sort an array of N items in time proportional to N lg N
@@ -67,9 +63,8 @@ func optSort(input []int, aux []int, lo int, hi int) {
 	// switcharoo
 	copy(input, aux)
 
-	merge(input, aux, lo, mid, hi)
+	optMerge(input, aux, lo, mid, hi)
 }
-
 
 func sort(input []int, aux []int, lo int, hi int) {
 	if hi <= lo {
@@ -101,7 +96,38 @@ func merge(input []int, aux []int, lo int, mid int, hi int) {
 		return
 	}
 
-	len := copy(aux, input)
+	copy(aux, input)
+
+	i := lo
+	j := mid + 1
+
+	for k := lo; k <= hi; k++ {
+		if i > mid {
+			// if i is bigger than mid, we can just copy what's left of j sub-array
+			input[k] = aux[j]
+			j++
+		} else if j > hi {
+			// if j is bigger than hi we can just copy what's left of i sub-array
+			input[k] = aux[i]
+			i++
+		} else {
+			// pick the smaller
+			if aux[j] < aux[i] {
+				input[k] = aux[j]
+				j++
+			} else {
+				input[k] = aux[i]
+				i++
+			}
+		}
+	}
+}
+
+func optMerge(input []int, aux []int, lo int, mid int, hi int) {
+	if input[mid] < input[mid + 1] {
+		// array is already ordered
+		return
+	}
 
 	i := lo
 	j := mid + 1
