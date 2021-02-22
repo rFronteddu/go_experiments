@@ -45,4 +45,16 @@ func TestMergeSort(t *testing.T) {
 	}
 }
 
+func TestOptMergeSort(t *testing.T) {
+	for _, inputArray := range inputs.MapOfSlices {
+		fmt.Println("------------------------------")
+		sorting.FasterMergeSort(inputArray)
+		if !sort.IntsAreSorted(inputArray) {
+			t.Errorf("Array is not sorted: %v", inputArray)
+		}
+	}
+}
+
+
+
 

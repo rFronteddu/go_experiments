@@ -6,7 +6,9 @@
 
 package sorting
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Merge sort divides the input into two halves, sorts the two, and merges the result.
 // (Divide and conquer algorithm)
@@ -38,11 +40,36 @@ import "fmt"
 // Improvements: use insertion sort for small sub-arrays
 // test whether an array is in order -> skip merges for a[mid] <= a[mid + 1]
 // eliminate copy to auxiliary array
-
+//
 func MergeSort(input []int) {
 	auxiliary := make([]int, len(input))
 	sort(input, auxiliary, 0, len(input) - 1)
 }
+
+// Made faster by reducing the copy time switching arrays
+func FasterMergeSort(src []int) {
+	auxiliary := src
+	optSort(auxiliary, src, 0, len(src) - 1)
+}
+
+func optSort(input []int, aux []int, lo int, hi int) {
+	if hi <= lo {
+		return
+	}
+	// if hi <= lo + CUTOFF do insertion sort return
+
+	mid := lo + (hi - lo) / 2
+
+	// switcharoo
+	sort (aux, input, lo, mid)
+	sort (aux, input, mid + 1, hi)
+
+	// switcharoo
+	copy(input, aux)
+
+	merge(input, aux, lo, mid, hi)
+}
+
 
 func sort(input []int, aux []int, lo int, hi int) {
 	if hi <= lo {
@@ -61,28 +88,20 @@ func sort(input []int, aux []int, lo int, hi int) {
 // First it copies the content of input into an auxiliary array. After that it start trying to fill
 // item by item in the right position.
 //
-// First we check if we are over the mid position, if we are, the rest is ordered
+// First we check if the pointer to the left array is over the mid position, if we are, the rest is ordered
 // then we check if we are trying to fill over hi
 // if we are we need to add the first part since we haven't filled enough items yet
 // third we need to check if an item on the right is smaller than one on the left
 // otherwise we can just put the item on the left
 //
-// }
 
 func merge(input []int, aux []int, lo int, mid int, hi int) {
-	fmt.Println(input)
-	fmt.Println("lo: ", lo)
-	fmt.Println("mid: ", mid)
-	fmt.Println("high: ", hi)
-	// copy aux
-	for k := lo; k <= hi; k++ {
-		aux[k] = input[k]
-	}
-
-	if aux[mid] < aux[mid + 1] {
+	if input[mid] < input[mid + 1] {
 		// array is already ordered
 		return
 	}
+
+	len := copy(aux, input)
 
 	i := lo
 	j := mid + 1
